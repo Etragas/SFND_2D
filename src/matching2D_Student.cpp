@@ -48,7 +48,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
     unsigned char harris_mean = mean.val[0];
     unsigned char harris_sttdev = stddev.val[0];
     // Create new matrix
-    cout << "Mean is " << int(harris_mean) << " sttdev is " << int(harris_sttdev) << "" << endl;
+    // cout << "Mean is " << int(harris_mean) << " sttdev is " << int(harris_sttdev) << "" << endl;
     cv::Mat keypoint_candidates = dst_norm_scaled - 1.5 * harris_mean;
 
     // For all points > 0
@@ -70,7 +70,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
         if (val < 2)
             continue;
         points_counted++;
-        keypoints.push_back(cv::KeyPoint(col_num, row_num, val));
+        keypoints.push_back(cv::KeyPoint(col_num, row_num, blockSize));
         cv::Point point(col_num, row_num);
         wipeNeighbors(keypoint_candidates, point, apertureSize);
         // Do something with pt...
@@ -89,7 +89,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
 
     if (matcherType.compare("MAT_BF") == 0)
     {
-        int normType = cv::NORM_HAMMING;
+        int normType = cv::NORM_L2;
         matcher = cv::BFMatcher::create(normType, crossCheck);
     }
     else if (matcherType.compare("MAT_FLANN") == 0)
@@ -168,7 +168,7 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
     double t = (double)cv::getTickCount();
     extractor->compute(img, keypoints, descriptors);
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-    cout << descriptorType << " descriptor extraction in " << 1000 * t / 1.0 << " ms" << endl;
+    // cout << descriptorType << " descriptor extraction in " << 1000 * t / 1.0 << " ms" << endl;
 }
 
 // Detect keypoints in image using the traditional Shi-Thomasi detector
